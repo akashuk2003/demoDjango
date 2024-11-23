@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+ <div class="container w-50 py-4">
+<div class="card mb-3" style="max-width: 540px; height=200px;">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <img src="{{product.image.url}}" class="img-fluid rounded-start" alt="...">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{product.name}}</h5>
+          <h5>{{product.price}}</h5>
+          <h5>{{product.stock}}</h5>
+        <p class="card-text" style="line-height:2;text-align:justify">{{product.description}}</p>
+          <a href="{% url 'cart:addtocart' product.id %}" type="button" class="btn btn-secondary">Add to cart</a>
+
+      </div>
+    </div>
+  </div>
+</div>
+ </div>
+{% endblock %}
