@@ -1,57 +1,65 @@
-from django.shortcuts import render,redirect
-from shop.models import Categories
-from shop.models import Product
+from django.shortcuts import render
+from shop.models import Category, Product
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.contrib.auth import login,authenticate,logout
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import AuthenticationForm
 
-# Create your views here.
 def categories(request):
-    c=Categories.objects.all()
+    c = Category.objects.all()
     context={'cat':c}
-    return render(request,'categories.html',context)
-def products(request,p):
-    c=Categories.objects.get(id=p)
-    p=Product.objects.filter(category=c)
-    context={'cat':c,'product':p}
-    return render(request,'products.html',context)
+    return render(request, 'categories.html', {'categories': c})
 
-def product_details(request,p):
+def products(request,p):
+    c=Category.objects.get(id=p)
+    p=Product.objects.filter(category=c)
+    context = {'cat':c,'product': p}
+    return render(request,'products.html',context)  # Pass products to the template
+
+def details(request,p):
     pro=Product.objects.get(id=p)
     context={'product':pro}
-    return render(request,'details.html',context)
+    return render(request,'detail.html',context)
+
 
 def register(request):
-    if(request.method=="POST"):
-        u=request.POST['u']
-        p=request.POST['p']
-        cp=request.POST['cp']
-        f=request.POST['f']
-        l=request.POST['l']
-        e=request.POST['e']
-        if(p==cp):
-            u=User.objects.create_user(username=u,password=p,first_name=f,last_name=l,email=e)
-            u.save()
+    if request.method == "POST":
+        u = request.POST['u']
+        p = request.POST['p']
+        cp = request.POST['cp']
+        f = request.POST['f']
+        l = request.POST['l']
+        e = request.POST['e']
+
+        # Check if the username already exists
+        if User.objects.filter(username=u).exists():
+            return HttpResponse("Username already exists. Please choose a different one.")
+
+        # Check if passwords match
+        if p == cp:
+            user = User.objects.create_user(username=u, password=p, email=e, first_name=f, last_name=l)
+            user.save()
             return redirect('shop:categories')
         else:
-            return HttpResponse("passwords are not same")
-    return render(request,'register.html')
+            return HttpResponse("Passwords do not match.")
 
-def user_login(request):
-    if(request.method=="POST"):
-        u=request.POST['u']
-        p=request.POST['p']
-        user=authenticate(username=u,password=p)
+    return render(request, 'register.html')
 
-        if user:
-            login(request,user)
-            return redirect('shop:categories')
+
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+
+        # Authenticate the user
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            # Login the user
+            login(request, user)
+            return redirect('shop:categories')  # Redirect to the desired page after login
         else:
-            return HttpResponse("invalid credentials")
+            return HttpResponse("Invalid username or password.")
 
-
-    return render(request,'login.html')
-
-def user_logout(request):
-    logout(request)
-    return redirect("shop:login")
+    return render(request, 'login.html')

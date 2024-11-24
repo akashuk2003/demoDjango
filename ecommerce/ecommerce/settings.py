@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-or7m-zr9_#u(1l-8t*l727vw%n41sg89i-n+^bq7amvup-rrjl'
+SECRET_KEY = 'django-insecure-pbz0y)=dv46!@rvdl!ekd2hce_my41$_2dr%tkoje75x6_7#f$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles','shop','search','cart','razorpay','corsheaders',
+    'django.contrib.staticfiles','shop','search','cart','razorpay',
 ]
 
 MIDDLEWARE = [
@@ -46,15 +45,12 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-     'corsheaders.middleware.CorsMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'ecommerce.urls'
-
-CORS_ORIGIN_ALLOW_ALL = True
+import os
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -66,14 +62,15 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'shop.context_processors.menu_links',
                 'cart.context_processors.count_items',
-
+                'shop.context_processors.menu_links',
             ],
         },
     },
 ]
-
+STATICFILES_DIRS=[os.path.join(BASE_DIR,'static'),]
+MEDIA_ROOT=os.path.join(BASE_DIR,'media')
+MEDIA_URL='/media/'
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 
@@ -122,11 +119,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATICFILES_DIRS=[os.path.join(BASE_DIR,'static')]
-MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 STATIC_URL = 'static/'
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = 'shop:categories'  # Redirect to homepage after login
+LOGOUT_REDIRECT_URL = 'shop:categories'  # Redirect to homepage after logout
+
+LOGIN_URL='shop:login'

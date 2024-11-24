@@ -15,15 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+# cart/urls.py
 from django.urls import path
-from cart import views
-app_name="cart"
-urlpatterns = [
-    path('addtocart/<int:i>',views.addtocart,name="addtocart"),
-    path('cart',views.cart_view,name='cart'),
-    path('cartremove/<int:i>',views.cart_remove,name="cartremove"),
-    path('cart_delete/<int:i>',views.cart_delete,name="cart_delete"),
-    path('orderform',views.order_form,name="orderform"),
-    path('status/<u>',views.payment_status,name="status"),
+from . import views
 
+app_name = 'cart'
+
+urlpatterns = [
+    path('addtocart/<int:i>/', views.addtocart, name='addtocart'),
+    path('cart',views.cart_view,name="cart"),
+    path('remove/<int:r>/',views.remove_cart, name='remove_cart'),
+    path('delete/<int:d>/',views.delete_cart,name="delete_cart"),
+    path('order_form/',views.order_form,name="order_form"),
+    path('status/<u>', views.payment_status, name="status"),
+    path('your_orders/',views.your_orders,name='your_orders'),
 ]

@@ -1,67 +1,149 @@
-<!DOCTYPE html>
 {% extends 'base.html' %}
 {% load static %}
+
 {% block content %}
+<style>
+    /* Container styling */
+    .cart-container {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        background-color: #555;
+        color: #fff;
+    }
 
-<h2 class="text-center"></h2>
-<div class="container mt-5 p-3" style="margin-bottom:100px;">
-      <h3 class="text-center">Shopping Cart</h3>
+    /* Cart table styling */
+    .cart-table, .checkout-box {
+        background-color: #444;
+        padding: 20px;
+        border: 1px solid #666;
+        border-radius: 10px;
+    }
 
-<div class="row">
-    <div class="col-7">
-<table class="table table-bordered text-center">
-    <tr>
-        <th colspan="6" class="text-center">Cart Items</th>
-    </tr>
+    .cart-table table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
 
-    {% for i in cart %}
+    .cart-table th, .cart-table td {
+        padding: 10px;
+        border: 1px solid #777;
+        text-align: center;
+    }
 
-    <tr>
-        <td><img src="{{i.product.image.url}}" height="200px"></td>
-        <td class="text-center">Product Name:{{i.product.name}}</td>
-        <td class="text-center">Quantity:{{i.quantity}}<br>
-        Unit Price:{{i.product.price}}</td>
-        <td>Subtotal:{{i.subtotal}}</td>
+    .cart-table th {
+        font-weight: bold;
+        color: #ddd;
+    }
 
-        {% if i.product.stock > 0 %}
+    .cart-table img {
+        width: 80px;
+        height: auto;
+        border-radius: 8px;
+    }
 
-        <td><a href="{% url 'cart:cart_delete' i.product.id %}"><i class="fa-solid fa-trash text-dark"></i></a>
-        <a href="{% url 'cart:addtocart' i.product.id %}"><i class="fa-solid fa-plus text-dark"></i></a>
-        <a href="{% url 'cart:cartremove' i.product.id %}"><i class="fa-solid fa-minus text-dark"></i></a></td>
-        {% else %}
-         <td><a href="{% url 'cart:cart_delete' i.product.id %}"><i class="fa-solid fa-trash text-dark"></i></a>
-        <a href="{% url 'cart:cartremove' i.product.id %}"><i class="fa-solid fa-minus text-dark"></i></a></td>
-        {% endif %}
-    </tr>
+    /* Checkout box styling */
+    .checkout-box {
+        width: 300px;
+        text-align: center;
+    }
 
-    {% endfor %}
+    .checkout-box h3 {
+        margin-bottom: 20px;
+        color: #ddd;
+    }
 
-</table>
-        </div>
+    /* Button styling */
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
 
-<div class="col-4">
+    .action-buttons button {
+        background-color: #333;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+    }
 
-             <table class="table table-bordered border border-1 border-danger text-center">
+    .action-buttons button:hover {
+        background-color: #777;
+    }
 
-            <tr>
-              <th colspan="4" class="text-center">Check Out</th>
-            </tr>
+    /* Order buttons */
+    .order-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin-top: 20px;
+    }
 
-            <tr>
-              <td class="text-center">Total Price :{{total}}</td>
-            </tr>
-            <tr>
-                <td>
-                <a href="{% url 'cart:orderform' %}" class="btn btn-primary" style="width:100%;" >Order Now</a>
-                <a href="" class="btn btn-primary" style="width:100%;margin-top:10px;">Continue Shopping</a>
-                </td>
-            </tr>
+    .order-buttons a {
+        text-decoration: none;
+        color: #fff;
+        background-color: #333;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
 
+    .order-buttons a:hover {
+        background-color: #777;
+    }
+</style>
+
+<div class="cart-container">
+    <!-- Cart Items Section -->
+    <div class="cart-table">
+        <h2>Cart Items</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Details</th>
+                    <th>Subtotal</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart %}
+                <tr>
+                    <td><img src="{{ item.product.image.url }}" alt="{{ item.product.name }}"></td>
+                    <td>
+                        <strong>{{ item.product.name }}</strong><br>
+                        Unit price: ₹{{ item.product.price }}<br>
+                        Quantity: {{ item.quantity }}
+                    </td>
+                    <td>₹{{ item.subtotal }}</td>
+                    <td class="action-buttons">
+                      <a href="{% url 'cart:addtocart' item.product.id %}" class="button">+</a>
+                        <a href="{% url 'cart:remove_cart' item.id %}" class="button">-</a>
+                        <a href="{% url 'cart:delete_cart' item.id %}" class="button">🗑️</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">Your cart is empty.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
-
     </div>
 
+    <!-- Checkout Section -->
+    <div class="checkout-box">
+        <h3>Check Out</h3>
+        <p><strong>Total Price:</strong> ₹{{ total_price }}</p>
+        <div class="order-buttons">
+            <a href="{% url 'cart:order_form'%}">Order Now</a>
+            <a href="{% url 'shop:categories'%}">Continue Shopping</a>
+        </div>
+    </div>
 </div>
-    </div>
 
 {% endblock %}

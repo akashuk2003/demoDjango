@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5 p-3 mx-auto" style="margin-bottom:100px;">
+  <h2>YOUR ORDERS</h2>
+  {% for i in grouped_orders %}
+  <div class="card mb-3" style="max-width: 540px;">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img src="{{ i.product.image.url }}" class="img-fluid rounded-start" alt="...">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">Product Name: {{ i.product.name }}</h5>
+          <p class="card-text">Price: ${{ i.product.price }}</p>
+          <p class="card-text">Total Quantity: {{ i.quantity }}</p>
+          <p class="card-text">Delivery Status: {{ i.status }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

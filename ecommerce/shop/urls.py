@@ -15,16 +15,23 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path
 from shop import views
-app_name = "shop"
+from django.contrib.auth import views as auth_views
+
+
+
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    path('',views.categories,name='categories'),
-    path('products/<int:p>',views.products,name='products'),
-    path('product_details/<int:p>',views.product_details,name='product_details'),
-    path('register',views.register,name='register'),
-    path('login',views.user_login,name='login'),
-    path('logout', views.user_logout, name='logout'),
-
+    path('', views.categories, name="categories"),
+    path('products/<int:p>/', views.products, name="products"),
+    path('details/<int:p>/', views.details, name="details"),
+    path('register/', views.register, name='register'),
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]
+
+# Fixed the placement of the view function
+

@@ -1,5 +1,9 @@
-from shop.models import Categories
+
+
+
+from shop.models import Category
 
 def menu_links(request):
-    c=Categories.objects.all()
-    return{'links':c}
+    c=Category.objects.all()
+    return {'links':c}
+

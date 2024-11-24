@@ -1,20 +1,17 @@
-from cart.models import Cart
 
+
+
+from cart.models import CartItem
 
 def count_items(request):
-    u=request.user
-
-    count=0
+    u = request.user
+    count = 0
     if request.user.is_authenticated:
         try:
+            cart_items = CartItem.objects.filter(user=u)
+            for item in cart_items:
+                count += item.quantity
+        except CartItem.DoesNotExist:
+            count = 0
+    return {'count_items': count}
 
-
-            c=Cart.objects.filter(user=u)
-
-
-            for i in c:
-                count+=i.quantity
-        except:
-            count=0
-
-    return {'c': count}

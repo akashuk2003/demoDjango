@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card p-4" style="border-radius: 15px; background-color: #f9f9f9;">
+                <div class="row">
+                    <!-- Product Image -->
+                    <div class="col-md-5 text-center">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid" style="border-radius: 10px;">
+                    </div>
+
+                    <!-- Product Details -->
+                    <div class="col-md-7">
+                        <h2>{{ product.name }}</h2>
+                        <p style="font-size: 1.5rem; font-weight: bold;">{{ product.price }}.00</p>
+                        <p>Quantity: {{ product.stock }}</p>
+
+                        <!-- Product Description -->
+                        <h4>Product Details</h4>
+                        <p>{{ product.desc }}</p>
+
+                        <!-- Add to Cart Button -->
+                        <a href="{% url 'cart:addtocart' product.id %}" class="btn btn-secondary mt-3" style="width: 100%; font-weight: bold;">
+
+                            ADD TO CART
+
+                        </a>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
